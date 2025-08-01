@@ -1,11 +1,13 @@
 package com.cdac.entites;
 
 public enum UNITS {
-	KG,
-    GRAM,
-    LITRE,
+
+	KILOGRAMS,
+    GRAMS,
+    LITERS,
     ML,
-    PIECE,
+    BOTTLE,
+    PIECES,
     PACKET,
     DOZEN
 	

@@ -24,6 +24,7 @@ public class GroceryResponseDto extends BaseDto {
 	private UNITS unit;
 	private LocalDate purchaseDate;
 	private LocalDate expiryDate;
-	private Category category;
-	private User user;
+
+	private CategoryRespDto category;
+	private UserMiniDto user;
 }
