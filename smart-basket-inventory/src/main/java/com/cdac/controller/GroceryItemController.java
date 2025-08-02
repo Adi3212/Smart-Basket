@@ -59,7 +59,7 @@ public class GroceryItemController {
 					.body(new ApiResponse(e.getMessage()));
 		}	}
 	@PutMapping("/grocery/{id}")
-	public ResponseEntity<?> updateGrocery(@org.springframework.web.bind.annotation.RequestBody GroceryRequestDto dto,@ PathVariable long id){
+	public ResponseEntity<?> updateGrocery(@org.springframework.web.bind.annotation.RequestBody GroceryRequestDto dto,@PathVariable long id){
 		try {
 			return ResponseEntity.status(HttpStatus.OK)
 					.body(service.updateGrocery(id, dto));

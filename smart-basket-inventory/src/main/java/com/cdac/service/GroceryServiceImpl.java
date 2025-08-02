@@ -55,8 +55,13 @@ public class GroceryServiceImpl implements GroceryService{
 	public ApiResponse addGrocery(GroceryRequestDto dto) {
 		// TODO Auto-generated method stub
 		System.out.println(dto);
-		GroceryItem item =   mapper.map(dto, GroceryItem.class);
+		Category c = categoryDao.findById(dto.getCategoryId()).orElseThrow(()-> new ResourceNotFoundException("not category with this id"));
+		User u = userDao.findById(dto.getUserId()).orElseThrow(()-> new ResourceNotFoundException("no user with this id"));
 		
+		GroceryItem item =   mapper.map(dto, GroceryItem.class);
+		u.getGrocery_items().add(item); 
+		item.setCategory(c);
+		item.setUser(u);
 		groceryDao.save(item);
 		
 		
@@ -75,28 +80,25 @@ public class GroceryServiceImpl implements GroceryService{
 	@Override
 	public GroceryResponseDto updateGrocery(long id, GroceryRequestDto dto) {
 
-	    // 1. Pehle existing grocery item fetch karo
+	    
 	    GroceryItem existingItem = groceryDao.findById(id)
 	        .orElseThrow(() -> new ResourceNotFoundException("No grocery by the ID"));
 
-	    // 2. Related entities fetch karo
+	    
 	    Category category = categoryDao.findById(dto.getCategoryId())
 	        .orElseThrow(() -> new ResourceNotFoundException("No category by the ID"));
 
 	    User user = userDao.findById(dto.getUserId())
 	        .orElseThrow(() -> new ResourceNotFoundException("No user by the ID"));
 
-	    // 3. DTO ke fields ko existing entity me map karo
-	    mapper.map(dto, existingItem);  // ye same object update karega, naye object nahi banayega
-
-	    // 4. Manually set karo user aur category, kyunki wo id se map nahi hote
+	    mapper.map(dto, existingItem);  
+	    
 	    existingItem.setCategory(category);
 	    existingItem.setUser(user);
 
-	    // 5. Save the updated entity
 	    GroceryItem updated = groceryDao.save(existingItem);
 
-	    // 6. Convert entity → response DTO
+	    
 	    return mapper.map(updated, GroceryResponseDto.class);
 	}
 

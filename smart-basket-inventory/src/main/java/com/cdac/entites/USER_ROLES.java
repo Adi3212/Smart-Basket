@@ -1,6 +1,6 @@
 package com.cdac.entites;
 
 public enum USER_ROLES {
-	USER,
-	ADMIN
+	 ROLE_USER,
+	 ROLE_ADMIN
 }

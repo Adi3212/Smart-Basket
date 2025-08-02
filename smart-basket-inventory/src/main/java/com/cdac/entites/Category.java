@@ -35,6 +35,7 @@ public class Category {
 	private long id;
 	@NotBlank(message = "category name cannot be blank")
 	private String name;
+	@ToString.Exclude
 	@OneToMany(mappedBy = "category",cascade = CascadeType.ALL,orphanRemoval = true)
 	List<GroceryItem> gorcery_items = new ArrayList<>();
 }

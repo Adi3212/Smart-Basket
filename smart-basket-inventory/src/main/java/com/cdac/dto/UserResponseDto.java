@@ -15,5 +15,5 @@ public class UserResponseDto {
 	private String phone_number;
 
 	private Set<RolesDto> roles = new HashSet<>();
-	private List<GroceryResponseDto> groceryItems = new ArrayList<>();
+	private List<UserGroceryResponseDto> grocery_items = new ArrayList<>();
 }

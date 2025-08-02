@@ -20,7 +20,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
+@ToString(callSuper = false)
 public class BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

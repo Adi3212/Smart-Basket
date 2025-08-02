@@ -62,6 +62,7 @@ public class User  extends BaseEntity{
 	        inverseJoinColumns = @JoinColumn(name = "role_id") // FK to Role
 	    )
 	 private Set<Roles> roles = new HashSet<>();
+	@ToString.Exclude
 	 @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true)
 	 List<GroceryItem> grocery_items = new ArrayList<>();
 	

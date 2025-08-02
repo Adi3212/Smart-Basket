@@ -46,11 +46,13 @@ public class GroceryItem extends BaseEntity{
 	private UNITS unit;
 	private LocalDate purchaseDate;
 	private LocalDate expiryDate;
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "category_id")
+	@ToString.Exclude
 	private Category category;
 	@ManyToOne
 	@JoinColumn(name = "user_id")
+	@ToString.Exclude
 	private User user;
 	
 }

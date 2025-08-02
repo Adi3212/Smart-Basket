@@ -9,11 +9,14 @@ import com.cdac.entites.User;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.ManyToMany;
-
+import lombok.Getter;
+import lombok.Setter;
+@Getter
+@Setter
 public class RolesDto extends BaseDto{
 	
 	private USER_ROLES  name;
 	
-	Set<UserRequestDto> users = new HashSet<>();
+	
 }
 
