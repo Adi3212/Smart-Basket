@@ -13,5 +13,6 @@ public interface GroceryService {
 	ApiResponse addGrocery(GroceryRequestDto dto);
 	ApiResponse deleteGroceryById(long id);
 	GroceryResponseDto updateGrocery(long id,GroceryRequestDto dto);
-	
+	List<GroceryResponseDto> groceryOfSpecificUser(long userId);
+	List<GroceryResponseDto> expirySoonGrocerys();
 }

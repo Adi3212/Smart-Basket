@@ -31,7 +31,7 @@ items	List<GroceryItem> (1:M)
  * */
 public class Category {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	@NotBlank(message = "category name cannot be blank")
 	private String name;

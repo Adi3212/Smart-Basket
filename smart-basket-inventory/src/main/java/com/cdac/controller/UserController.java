@@ -24,7 +24,7 @@ import lombok.AllArgsConstructor;
 @Validated
 public class UserController {
 	private final UserService service;
-    @GetMapping("/user")
+    @GetMapping
 	public ResponseEntity<?> getAllUsers(){
     	try {
 			return ResponseEntity.status(HttpStatus.OK)
@@ -35,7 +35,7 @@ public class UserController {
 					.body(new ApiResponse(e.getMessage()));
 		}
 	}
-    @PostMapping("/user")
+    @PostMapping
     public ResponseEntity<?> addUser(@RequestBody UserRequestDto dto){
     	try {
 			return ResponseEntity.status(HttpStatus.OK)
@@ -46,7 +46,7 @@ public class UserController {
 					.body(new ApiResponse(e.getMessage()));
 		}
     }
-    @GetMapping("/user/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<?> getUserWithId(@PathVariable long id){
     	try {
 			return ResponseEntity.status(HttpStatus.OK)
@@ -57,10 +57,18 @@ public class UserController {
 					.body(new ApiResponse(e.getMessage()));
 		}
     }
-    @PutMapping("/user/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<?> updateUserWithId(@RequestBody UserRequestDto dto,@PathVariable long id){
-    	return null;
+    	try {
+			return ResponseEntity.status(HttpStatus.OK)
+					.body(service.updateUserWithId(dto, id));
+		} catch (Exception e) {
+			// TODO: handle exception
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body(new ApiResponse(e.getMessage()));
+		}
     }
+    //Todo: create api for deleteUser add Controller
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable long id){
     	return null;

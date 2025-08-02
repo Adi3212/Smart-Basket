@@ -1,5 +1,7 @@
 package com.cdac.service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collector;
@@ -100,6 +102,39 @@ public class GroceryServiceImpl implements GroceryService{
 
 	    
 	    return mapper.map(updated, GroceryResponseDto.class);
+	}
+
+	@Override
+	public List<GroceryResponseDto> groceryOfSpecificUser(long userId) {
+		// TODO Auto-generated method stub
+		
+		List<GroceryItem> userItems = groceryDao.findByUserId(userId);
+		
+		
+		return userItems.stream()
+				.map(item -> mapper.map(item, GroceryResponseDto.class))
+				.collect(Collectors.toList());
+		
+	}
+
+	@Override
+	public List<GroceryResponseDto> expirySoonGrocerys() {
+		// TODO Auto-generated method stub
+		
+		List<GroceryItem> gcList = groceryDao.findAll();
+		List<GroceryItem> expiredGroceryItems = new ArrayList<>();
+		LocalDate today = LocalDate.now();
+		LocalDate thresholdDate = today.plusDays(6); 
+
+		List<GroceryItem> expiringSoonItems = gcList.stream()
+			.filter(item -> {
+				LocalDate expiry = item.getExpiryDate();
+				return expiry != null && !expiry.isBefore(today) && !expiry.isAfter(thresholdDate);
+			})
+			.collect(Collectors.toList());
+		return expiringSoonItems.stream()
+				.map(item -> mapper.map(item, GroceryResponseDto.class))
+				.collect(Collectors.toList());
 	}
 
 

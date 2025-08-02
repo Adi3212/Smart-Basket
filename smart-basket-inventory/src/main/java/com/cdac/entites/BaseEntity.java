@@ -23,7 +23,7 @@ import lombok.ToString;
 @ToString(callSuper = false)
 public class BaseEntity {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
 	@CreationTimestamp

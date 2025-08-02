@@ -1,6 +1,8 @@
 package com.cdac.service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.cdac.custom_exceptions.ResourceNotFoundException;
 import com.cdac.dao.GroceryDao;
+import com.cdac.dao.RolesDao;
 import com.cdac.dao.UserDao;
 import com.cdac.dto.ApiResponse;
 import com.cdac.dto.GroceryRequestDto;
@@ -17,6 +20,7 @@ import com.cdac.dto.UserGroceryResponseDto;
 import com.cdac.dto.UserRequestDto;
 import com.cdac.dto.UserResponseDto;
 import com.cdac.entites.GroceryItem;
+import com.cdac.entites.Roles;
 import com.cdac.entites.User;
 
 import jakarta.transaction.Transactional;
@@ -28,6 +32,7 @@ public class UserServiceImpl implements UserService{
 	private final UserDao userDao;
 	private ModelMapper mapper;
 	private final GroceryDao groceryDao;
+	private final  RolesDao rolesDao;
 	@Override
 	public List<UserResponseDto> getAllUserDetails() {
 		// TODO Auto-generated method stub
@@ -81,14 +86,28 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public UserResponseDto updateUserWithId(UserRequestDto dto, long id) {
-		// TODO Auto-generated method stub
-		User user = userDao.findById(id)
-			    .orElseThrow(() -> new ResourceNotFoundException("No user with id"));
-		
-		User updatedUser = mapper.map(dto, User.class);
-		userDao.save(updatedUser);
-		return mapper.map(updatedUser, UserResponseDto.class);
-	
+	    User existingUser = userDao.findById(id)
+	        .orElseThrow(() -> new ResourceNotFoundException("No user with id"));
+
+	   
+	    existingUser.setName(dto.getName());
+	    existingUser.setEmail(dto.getEmail());
+	    existingUser.setPassword(dto.getPassword());
+	    existingUser.setPhone_number(dto.getPhone_number());
+
+	   
+	    Set<Roles> roles = new HashSet<>();
+	    for (Long roleId : dto.getRoleIds()) {
+	        Roles role = rolesDao.findById(roleId)
+	            .orElseThrow(() -> new ResourceNotFoundException("Invalid role ID: " + roleId));
+	        roles.add(role);
+	    }
+	    existingUser.setRoles(roles);
+
+	    
+	    User savedUser = userDao.save(existingUser);
+	    return mapper.map(savedUser, UserResponseDto.class);
 	}
+
 
 }

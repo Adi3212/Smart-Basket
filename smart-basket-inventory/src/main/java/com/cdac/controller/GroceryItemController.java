@@ -26,7 +26,7 @@ import lombok.AllArgsConstructor;
 public class GroceryItemController {
 	
 	private  final GroceryService service;
-	@GetMapping("/grocery")
+	@GetMapping
 	public ResponseEntity<?> getAllItem(){
 		try {
 			return ResponseEntity.status(HttpStatus.OK)
@@ -37,7 +37,7 @@ public class GroceryItemController {
 					.body(new ApiResponse(e.getMessage()));
 		}
 	}
-	@GetMapping("/grocery/{id}")
+	@GetMapping("/{id}")
 	public ResponseEntity<?> getGroceryWithId(@PathVariable long id){
 		try {
 			return ResponseEntity.status(HttpStatus.OK)
@@ -58,7 +58,7 @@ public class GroceryItemController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 					.body(new ApiResponse(e.getMessage()));
 		}	}
-	@PutMapping("/grocery/{id}")
+	@PutMapping("/{id}")
 	public ResponseEntity<?> updateGrocery(@org.springframework.web.bind.annotation.RequestBody GroceryRequestDto dto,@PathVariable long id){
 		try {
 			return ResponseEntity.status(HttpStatus.OK)
@@ -69,7 +69,7 @@ public class GroceryItemController {
 					.body(new ApiResponse(e.getMessage()));
 		}
 	}
-	@DeleteMapping("/grocery/{id}")
+	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deleteGrocery(@PathVariable long id){
 		try {
 			return ResponseEntity.status(HttpStatus.OK)
@@ -80,7 +80,21 @@ public class GroceryItemController {
 					.body(new ApiResponse(e.getMessage()));
 		}
 	}
-	
+	@GetMapping("/user/{userId}")
+	public ResponseEntity<?> getGroceryForSpecificUser(long userId){
+		return null;
+	}
+	@GetMapping("/expiry-soon")
+	public ResponseEntity<?> getExpirySoonGrocery(){
+		try {
+			return ResponseEntity.status(HttpStatus.OK)
+					.body(service.expirySoonGrocerys());
+		} catch (Exception e) {
+			// TODO: handle exception
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body(new ApiResponse(e.getMessage()));
+		}
+	}
 	
 	
 	
