@@ -7,6 +7,7 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.cdac.custom_exceptions.ResourceNotFoundException;
@@ -33,6 +34,7 @@ public class UserServiceImpl implements UserService{
 	private ModelMapper mapper;
 	private final GroceryDao groceryDao;
 	private final  RolesDao rolesDao;
+	private final PasswordEncoder passwordEncoder;
 	@Override
 	public List<UserResponseDto> getAllUserDetails() {
 		// TODO Auto-generated method stub
@@ -64,6 +66,7 @@ public class UserServiceImpl implements UserService{
 	public ApiResponse addUser(UserRequestDto dto) {
 		// TODO Auto-generated method stub
 		User user = mapper.map(dto, User.class);
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		User u = userDao.save(user);
 		if(u == null) {
 			return new ApiResponse("user not created");

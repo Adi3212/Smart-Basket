@@ -2,6 +2,7 @@ package com.cdac.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cdac.dto.ApiResponse;
 import com.cdac.dto.UserRequestDto;
+import com.cdac.dto.UserSigninDto;
 import com.cdac.service.UserService;
+import org.springframework.security.core.Authentication;
 
 import lombok.AllArgsConstructor;
 
@@ -35,17 +38,9 @@ public class UserController {
 					.body(new ApiResponse(e.getMessage()));
 		}
 	}
-    @PostMapping
-    public ResponseEntity<?> addUser(@RequestBody UserRequestDto dto){
-    	try {
-			return ResponseEntity.status(HttpStatus.OK)
-					.body(service.addUser(dto));
-		} catch (Exception e) {
-			// TODO: handle exception
-			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-					.body(new ApiResponse(e.getMessage()));
-		}
-    }
+  
+
+   
     @GetMapping("/{id}")
     public ResponseEntity<?> getUserWithId(@PathVariable long id){
     	try {

@@ -1,11 +1,15 @@
 package com.cdac.entites;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.hibernate.validator.constraints.Length;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -42,7 +46,7 @@ groceryItems	List<GroceryItem> (1:M)
 @NoArgsConstructor
 @Table(name = "user")
 @ToString(callSuper = true)
-public class User  extends BaseEntity{
+public class User  extends BaseEntity implements UserDetails{
 	
 	@NotBlank(message = "name cannot be blank")
 	private String name;
@@ -65,5 +69,17 @@ public class User  extends BaseEntity{
 	@ToString.Exclude
 	 @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true)
 	 List<GroceryItem> grocery_items = new ArrayList<>();
-	
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+	    List<GrantedAuthority> authorities = new ArrayList<>();
+	    for (Roles role : roles) {
+	        authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
+	    }
+	    return authorities;
+	}
+	@Override
+	public String getUsername() {
+		// TODO Auto-generated method stub
+		return this.email;
+	}
 }
