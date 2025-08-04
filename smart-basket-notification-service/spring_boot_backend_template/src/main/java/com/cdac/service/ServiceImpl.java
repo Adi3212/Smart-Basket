@@ -35,7 +35,7 @@ public class ServiceImpl implements NotificationService{
 
 	    @Override
 	    public ApiResponse sendExpiryNotifications() {
-	        String url = "http://localhost:8081/grocery/expiry-soon";
+	        String url = "http://localhost:8080/grocery/expiry-soon";
 
 	        ResponseEntity<List<GroceryItemDto>> response = restTemplate.exchange(
 	            url,

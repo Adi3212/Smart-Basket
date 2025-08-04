@@ -64,16 +64,27 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	public ApiResponse addUser(UserRequestDto dto) {
-		// TODO Auto-generated method stub
-		User user = mapper.map(dto, User.class);
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		User u = userDao.save(user);
-		if(u == null) {
-			return new ApiResponse("user not created");
-		}
-		return new  ApiResponse("user created successfully");
+	    User user = mapper.map(dto, User.class);
+	    user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+	    // ✅ Fetch and set roles
+	    Set<Roles> roles = dto.getRoleIds().stream()
+	        .map(id -> rolesDao.findById(id)
+	            .orElseThrow(() -> new RuntimeException("Role not found: " + id)))
+	        .collect(Collectors.toSet());
+
+	    user.setRoles(roles); // This will populate user_roles table
+
+	    User savedUser = userDao.save(user);
+
+	    if (savedUser == null) {
+	        return new ApiResponse("user not created");
+	    }
+
+	    return new ApiResponse("user created successfully");
 	}
-	
+
+
 	@Override
 	public ApiResponse deleteUser(long id) {
 		// TODO Auto-generated method stub

@@ -18,7 +18,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString(callSuper = true)
+@ToString(exclude = "users")
 @Table(name = "role")
 public class Roles extends BaseEntity{
 	@Enumerated(EnumType.STRING)

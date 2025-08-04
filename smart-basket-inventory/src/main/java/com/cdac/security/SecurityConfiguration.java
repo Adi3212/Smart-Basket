@@ -33,42 +33,39 @@ public class SecurityConfiguration {
 	 */
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		// 1. Disable CSRF protection
 		http.csrf(csrf -> csrf.disable());
-		// 2. Authenticate any request
+
 		http.authorizeHttpRequests(request -> request
-			    // 🔓 PUBLIC (Swagger & Auth)
-			    .requestMatchers("/swagger-ui/**", "/v*/api-docs/**",
-			                     "/users/signin", "/users/signup", "/error").permitAll()
-			    .requestMatchers(HttpMethod.OPTIONS).permitAll()
+			.requestMatchers("/swagger-ui/**", "/v*/api-docs/**",
+			                 "/users/signin", "/users/signup", "/error", "/grocery/expiry-soon").permitAll()
+			.requestMatchers(HttpMethod.OPTIONS).permitAll()
 
-			    // 👤 USER CONTROLLER
-			    .requestMatchers(HttpMethod.GET, "/user/{id}").hasAnyRole("USER", "ADMIN")
-			    .requestMatchers(HttpMethod.PUT, "/user/{id}").hasAnyRole("USER", "ADMIN")
-			    .requestMatchers(HttpMethod.DELETE, "/user/{id}").hasRole("ADMIN")
-			    .requestMatchers(HttpMethod.GET, "/user").hasRole("ADMIN")
-			    .requestMatchers(HttpMethod.POST, "/user").hasRole("ADMIN")
+			// 👤 USER CONTROLLER
+			.requestMatchers(HttpMethod.GET, "/user/{id}").hasAnyAuthority("USER", "ADMIN")
+			.requestMatchers(HttpMethod.PUT, "/user/{id}").hasAnyAuthority("USER", "ADMIN")
+			.requestMatchers(HttpMethod.DELETE, "/user/{id}").hasAuthority("ADMIN")
+			.requestMatchers(HttpMethod.GET, "/user").hasAuthority("ADMIN")
+			.requestMatchers(HttpMethod.POST, "/user").hasAuthority("ADMIN")
 
-			    // 🧺 GROCERY CONTROLLER
-			    .requestMatchers(HttpMethod.GET, "/grocery/{id}").hasAnyRole("USER", "ADMIN")
-			    .requestMatchers(HttpMethod.PUT, "/grocery/{id}").hasAnyRole("USER", "ADMIN")
-			    .requestMatchers(HttpMethod.DELETE, "/grocery/{id}").hasAnyRole("USER", "ADMIN")
+			// 🧺 GROCERY CONTROLLER
+			.requestMatchers(HttpMethod.GET, "/grocery/{id}").hasAnyAuthority("USER", "ADMIN")
+			.requestMatchers(HttpMethod.PUT, "/grocery/{id}").hasAnyAuthority("USER", "ADMIN")
+			.requestMatchers(HttpMethod.DELETE, "/grocery/{id}").hasAnyAuthority("USER", "ADMIN")
+			.requestMatchers(HttpMethod.POST, "/grocery/grocery").hasAuthority("USER")
+			.requestMatchers(HttpMethod.GET, "/grocery").hasAuthority("USER")
+			.requestMatchers(HttpMethod.GET, "/grocery/user/{userId}").hasAuthority("USER")
 
-			    .requestMatchers(HttpMethod.POST, "/grocery/grocery").hasRole("USER")
-			    .requestMatchers(HttpMethod.GET, "/grocery").hasRole("USER")
-			    .requestMatchers(HttpMethod.GET, "/grocery/user/{userId}").hasRole("USER")
-			    .requestMatchers(HttpMethod.GET, "/grocery/expiry-soon").hasRole("ADMIN")
 
-			    // 🚫 Everything else requires authentication
-			    .anyRequest().authenticated()
-			   
-			);
+			.anyRequest().authenticated()
+		);
+
 		http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-	    http.exceptionHandling(ex -> ex.authenticationEntryPoint(jwtAuthEntryPoint));
-	    http.addFilterBefore(customJwtFilter, UsernamePasswordAuthenticationFilter.class);
+		http.exceptionHandling(ex -> ex.authenticationEntryPoint(jwtAuthEntryPoint));
+		http.addFilterBefore(customJwtFilter, UsernamePasswordAuthenticationFilter.class);
 
-	    return http.build();
+		return http.build();
 	}
+
 
 	// configure a spring to return Spring security authentication manager
 	@Bean

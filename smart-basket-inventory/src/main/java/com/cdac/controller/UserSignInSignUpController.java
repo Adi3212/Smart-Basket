@@ -61,7 +61,7 @@ public class UserSignInSignUpController {
 				authenticationManager.authenticate(authToken);
 		//=> success
 		System.out.println("after - "+validAuth.isAuthenticated());//true
-		System.out.println(validAuth);//user details : UserEntity
+		
 		//2. Create signed JWT n send it in the response.
 		
 		return ResponseEntity.status(HttpStatus.CREATED)//SC 201
@@ -80,7 +80,7 @@ public class UserSignInSignUpController {
 	public ResponseEntity<?> signupUser(@RequestBody @Valid
 			UserRequestDto dto)
 	{
-		System.out.println("in signup "+dto);
+		
 		return ResponseEntity
 				.status(HttpStatus.CREATED)
 				.body(userService.addUser(dto));

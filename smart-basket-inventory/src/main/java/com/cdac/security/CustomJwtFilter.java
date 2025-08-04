@@ -1,6 +1,7 @@
 package com.cdac.security;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,50 +15,54 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Component // spring bean - can be injected as dependency
-//in other spring beans
-//OncePerRequestFilter -represents a filter which is 
-//invoked once per every request
+@Component
 @Slf4j
 @AllArgsConstructor
 public class CustomJwtFilter extends OncePerRequestFilter {
-	private final JwtUtils jwtUtils;
 
-	@Override
-	protected void doFilterInternal(HttpServletRequest request, 
-			HttpServletResponse response, FilterChain filterChain)
-			throws ServletException, IOException {
-		// 1. Check HTTP request header - "Authorization"
-		String headerValue = request.getHeader("Authorization");
-		if (headerValue != null && headerValue.startsWith("Bearer ")) {
-			// => JWT exists
-			// 2 . Extract JWT
-			String jwt = headerValue.substring(7);
-			log.info("JWT in request header {} ", jwt);
-			/*
-			 * 3 . Validate Token -> in case of success populate Authentication object . -
-			 * call JwtUtils 's method
-			 * 
-			 */
-			Authentication authentication = 
-					jwtUtils.populateAuthenticationTokenFromJWT(jwt);
-			// => no exc - examples :  invalid token ,invalid signature , jwt expired....
-			log.info("auth object from JWT {} ", authentication);
-			log.info("is auth : {}", authentication.isAuthenticated());//true
-			/*
-			 * 4. Store authentication object - under Spring security 
-			 * ctx holder - 
-			 * scope :
-			 * current request only (since Session creation policy - STATELESS)
-			 */
-			SecurityContextHolder
-			.getContext() //rets current sec ctx
-			.setAuthentication(authentication);
+    private final JwtUtils jwtUtils;
 
-		}
-		//allow the request to continue ....
-		filterChain.doFilter(request, response);
+    @Override
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain)
+            throws ServletException, IOException {
 
-	}
+        // ✅ Step 0: Exclude public paths
+        String path = request.getRequestURI();
+        List<String> excludedPaths = List.of(
+            "/grocery/expiry-soon",
+            "/users/signin",
+            "/users/signup"
+        );
 
+        if (excludedPaths.contains(path)) {
+            log.info("Skipping JWT auth for public path: {}", path);
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        // ✅ Step 1: Extract and validate JWT
+        String headerValue = request.getHeader("Authorization");
+        if (headerValue != null && headerValue.startsWith("Bearer ")) {
+            String jwt = headerValue.substring(7);
+            log.info("JWT in request header: {}", jwt);
+
+            try {
+                Authentication authentication = jwtUtils.populateAuthenticationTokenFromJWT(jwt);
+                if (authentication != null && authentication.isAuthenticated()) {
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                    log.info("JWT auth successful for user: {}", authentication.getName());
+                }
+            } catch (Exception ex) {
+                log.warn("Invalid JWT: {}", ex.getMessage());
+                // Optional: set 401 status or let it continue unauthenticated
+                // response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                // return;
+            }
+        }
+
+        // ✅ Step 2: Continue with filter chain
+        filterChain.doFilter(request, response);
+    }
 }

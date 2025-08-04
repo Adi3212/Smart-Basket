@@ -45,7 +45,7 @@ groceryItems	List<GroceryItem> (1:M)
 @Setter
 @NoArgsConstructor
 @Table(name = "user")
-@ToString(callSuper = true)
+
 public class User  extends BaseEntity implements UserDetails{
 	
 	@NotBlank(message = "name cannot be blank")
@@ -65,6 +65,7 @@ public class User  extends BaseEntity implements UserDetails{
 	        joinColumns = @JoinColumn(name = "user_id"),  // FK to User
 	        inverseJoinColumns = @JoinColumn(name = "role_id") // FK to Role
 	    )
+	@ToString.Exclude
 	 private Set<Roles> roles = new HashSet<>();
 	@ToString.Exclude
 	 @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true)
@@ -73,7 +74,7 @@ public class User  extends BaseEntity implements UserDetails{
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 	    List<GrantedAuthority> authorities = new ArrayList<>();
 	    for (Roles role : roles) {
-	        authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
+	        authorities.add(new SimpleGrantedAuthority(role.getName().name().toString()));
 	    }
 	    return authorities;
 	}
