@@ -124,7 +124,7 @@ public class GroceryServiceImpl implements GroceryService{
 		List<GroceryItem> gcList = groceryDao.findAll();
 		List<GroceryItem> expiredGroceryItems = new ArrayList<>();
 		LocalDate today = LocalDate.now();
-		LocalDate thresholdDate = today.plusDays(6); 
+		LocalDate thresholdDate = today.plusDays(7); 
 
 		List<GroceryItem> expiringSoonItems = gcList.stream()
 			.filter(item -> {

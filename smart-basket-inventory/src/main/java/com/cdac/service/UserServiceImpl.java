@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService{
 		}
 		return new  ApiResponse("user created successfully");
 	}
-
+	
 	@Override
 	public ApiResponse deleteUser(long id) {
 		// TODO Auto-generated method stub
