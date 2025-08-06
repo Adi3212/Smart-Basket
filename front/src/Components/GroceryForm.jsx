@@ -1,7 +1,6 @@
-// components/GroceryForm.jsx
 import React, { useEffect, useState } from 'react';
 
-const GroceryForm = ({ onSubmit }) => {
+const GroceryForm = ({ onSubmit, initialData = null }) => {
   const [formData, setFormData] = useState({
     name: '',
     quantity: 1,
@@ -9,18 +8,30 @@ const GroceryForm = ({ onSubmit }) => {
     purchaseDate: '',
     expiryDate: '',
     categoryId: '',
-    userId: '', // will be set automatically
+    userId: '',
   });
 
-  const units = ['KG', 'LITRE', 'PCS', 'GRAM']; // Your ENUMs
+  const units = ['KG', 'LITRE', 'PCS', 'GRAM'];
 
-  // 👉 Fetch userId from localStorage/session on mount
+  // Set userId from localStorage and populate initial data if editing
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user'));
-    if (user && user.id) {
-      setFormData((prev) => ({ ...prev, userId: user.id }));
+    const userId = user?.id || '';
+
+    if (initialData) {
+      setFormData({
+        name: initialData.name || '',
+        quantity: initialData.quantity || 1,
+        unit: initialData.unit || 'KG',
+        purchaseDate: initialData.purchaseDate?.slice(0, 10) || '',
+        expiryDate: initialData.expiryDate?.slice(0, 10) || '',
+        categoryId: initialData.category?.id || '',
+        userId: userId,
+      });
+    } else {
+      setFormData((prev) => ({ ...prev, userId }));
     }
-  }, []);
+  }, [initialData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -34,31 +45,43 @@ const GroceryForm = ({ onSubmit }) => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 p-6 bg-white rounded shadow max-w-xl mx-auto">
-      <input
-        type="text"
-        name="name"
-        placeholder="Grocery Name"
-        value={formData.name}
-        onChange={handleChange}
-        required
-        className="w-full border p-2"
-      />
+      <div>
+        <label className="block mb-1 font-medium">Grocery Name</label>
+        <input
+          type="text"
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
+          required
+          className="w-full border p-2"
+        />
+      </div>
 
-      <input
-        type="number"
-        name="quantity"
-        placeholder="Quantity"
-        value={formData.quantity}
-        onChange={handleChange}
-        required
-        className="w-full border p-2"
-      />
+      <div>
+        <label className="block mb-1 font-medium">Quantity</label>
+        <input
+          type="number"
+          name="quantity"
+          value={formData.quantity}
+          onChange={handleChange}
+          required
+          className="w-full border p-2"
+        />
+      </div>
 
-      <select name="unit" value={formData.unit} onChange={handleChange} className="w-full border p-2">
-        {units.map((u) => (
-          <option key={u} value={u}>{u}</option>
-        ))}
-      </select>
+      <div>
+        <label className="block mb-1 font-medium">Unit</label>
+        <select
+          name="unit"
+          value={formData.unit}
+          onChange={handleChange}
+          className="w-full border p-2"
+        >
+          {units.map((u) => (
+            <option key={u} value={u}>{u}</option>
+          ))}
+        </select>
+      </div>
 
       <div>
         <label className="block mb-1 font-medium">Purchase Date</label>
@@ -82,24 +105,25 @@ const GroceryForm = ({ onSubmit }) => {
         />
       </div>
 
-      <input
-        type="text"
-        name="categoryId"
-        placeholder="Category ID"
-        value={formData.categoryId}
-        onChange={handleChange}
-        className="w-full border p-2"
-      />
+      <div>
+        <label className="block mb-1 font-medium">Category ID</label>
+        <input
+          type="text"
+          name="categoryId"
+          value={formData.categoryId}
+          onChange={handleChange}
+          className="w-full border p-2"
+        />
+      </div>
 
-      {/* 👇 Hidden userId input (just for debug, or remove it) */}
-      <input
-        type="hidden"
-        name="userId"
-        value={formData.userId}
-      />
+      {/* hidden userId field (optional for debug) */}
+      <input type="hidden" name="userId" value={formData.userId} />
 
-      <button type="submit" className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
-        Add Grocery
+      <button
+        type="submit"
+        className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
+      >
+        {initialData ? 'Update Grocery' : 'Add Grocery'}
       </button>
     </form>
   );

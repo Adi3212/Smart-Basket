@@ -1,10 +1,34 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import { jwtDecode } from "jwt-decode";
+import { useEffect, useState } from "react";
 
 export default function UserDropdown() {
+  const [username, setUsername] = useState("User");
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        console.log(decoded);
+        
+        console.log("User ID:", decoded.userId);
+        console.log("Email:", decoded.sub || decoded.email);
+        console.log("Expiry:", decoded.exp);
+        console.log("Username:", decoded.username);
+
+        setUsername(decoded.sub || "User");
+      } catch (err) {
+        console.error("Invalid token:", err.message);
+      }
+    }
+  }, []);
+
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger className="p-2 bg-green-600 rounded-full hover:bg-green-700 text-white focus:outline-none">
-        Admin
+        {username}
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Content
