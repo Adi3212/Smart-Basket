@@ -1,25 +1,45 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from './Components/Navbar';
-import Dashboard from './pages/Dashboard';
-import AddGroceryPage from './pages/AddGroceryPage';
-import EditGroceryPage from './pages/EditGroceryPage ';
-import SignIn from './pages/SignIn ';
-import SignUp from './pages/SignUp ';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import PrivateRoute from "./Components/PrivateRoute";
 
+import Dashboard from "./pages/Dashboard";
+import AddGroceryPage from "./pages/AddGroceryPage";
+import EditGroceryPage from "./pages/EditGroceryPage";
+import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
+import Navbar from "./Components/Navbar";
 
 function App() {
   return (
     <Router>
       <Navbar />
       <Routes>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/add-grocery" element={<AddGroceryPage></AddGroceryPage>} />
-        <Route path="/edit/:id" element={<EditGroceryPage />} />
-        <Route path="/sign-in" element={<SignIn></SignIn>} />
+        <Route path="/sign-in" element={<SignIn />} />
         <Route path="/sign-up" element={<SignUp />} />
-        {/* <Route path="/login" element={<Login />} /> */}
-        {/* <Route path="*" element={<NotFound />} /> */}
+
+        <Route
+          path="/dashboard"
+          element={
+            <PrivateRoute>
+              <Dashboard />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/add-grocery"
+          element={
+            <PrivateRoute>
+              <AddGroceryPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/edit/:id"
+          element={
+            <PrivateRoute>
+              <EditGroceryPage />
+            </PrivateRoute>
+          }
+        />
       </Routes>
     </Router>
   );

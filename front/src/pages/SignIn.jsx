@@ -21,11 +21,12 @@ const SignIn = () => {
         console.log(token);
         
       localStorage.setItem('token', token);
+      window.dispatchEvent(new Event("user-changed"));
       localStorage.setItem('user', JSON.stringify(user));
 
       alert('Login Successful');
       // redirect to dashboard or home
-      navigate("/")
+      navigate("/dashboard")
 
     } catch (err) {
       alert('Login failed: ' + err.response?.data?.message || err.message);
