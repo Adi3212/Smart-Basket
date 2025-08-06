@@ -9,10 +9,10 @@ import com.cdac.entites.GroceryItem;
 
 public interface GroceryService {
 	List<GroceryResponseDto> getAllGrocery();
-	GroceryResponseDto getGroceryById(long id);
+	GroceryResponseDto getGroceryById(Long id);
 	ApiResponse addGrocery(GroceryRequestDto dto);
-	ApiResponse deleteGroceryById(long id);
-	GroceryResponseDto updateGrocery(long id,GroceryRequestDto dto);
-	List<GroceryResponseDto> groceryOfSpecificUser(long userId);
+	ApiResponse deleteGroceryById(Long id);
+	GroceryResponseDto updateGrocery(Long id,GroceryRequestDto dto);
+	List<GroceryResponseDto> groceryOfSpecificUser(Long userId);
 	List<GroceryResponseDto> expirySoonGrocerys();
 }

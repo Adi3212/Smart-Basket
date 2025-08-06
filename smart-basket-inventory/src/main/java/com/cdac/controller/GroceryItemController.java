@@ -60,7 +60,7 @@ public class GroceryItemController {
 					.body(new ApiResponse(e.getMessage()));
 		}	}
 	@PutMapping("/{id}")
-	public ResponseEntity<?> updateGrocery(@org.springframework.web.bind.annotation.RequestBody GroceryRequestDto dto,@PathVariable long id){
+	public ResponseEntity<?> updateGrocery(@org.springframework.web.bind.annotation.RequestBody GroceryRequestDto dto,@PathVariable Long id){
 		try {
 			return ResponseEntity.status(HttpStatus.OK)
 					.body(service.updateGrocery(id, dto));
@@ -71,7 +71,7 @@ public class GroceryItemController {
 		}
 	}
 	@DeleteMapping("/{id}")
-	public ResponseEntity<?> deleteGrocery(@PathVariable long id){
+	public ResponseEntity<?> deleteGrocery(@PathVariable Long id){
 		try {
 			return ResponseEntity.status(HttpStatus.OK)
 					.body(service.deleteGroceryById(id));
@@ -82,8 +82,15 @@ public class GroceryItemController {
 		}
 	}
 	@GetMapping("/user/{userId}")
-	public ResponseEntity<?> getGroceryForSpecificUser(long userId){
-		return null;
+	public ResponseEntity<?> getGroceryForSpecificUser(@PathVariable Long userId){
+		try {
+			return ResponseEntity.status(HttpStatus.OK)
+					.body(service.groceryOfSpecificUser(userId));
+		} catch (Exception e) {
+			// TODO: handle exception
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body(new ApiResponse(e.getMessage()));
+		}
 	}
 
 	@GetMapping("/expiry-soon")

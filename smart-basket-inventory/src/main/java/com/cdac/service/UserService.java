@@ -9,10 +9,10 @@ import com.cdac.dto.UserResponseDto;
 public interface UserService {
 
 	public List<UserResponseDto> getAllUserDetails();
-	public UserResponseDto getUserWithId(long id);
+	public UserResponseDto getUserWithId(Long id);
 	public ApiResponse addUser(UserRequestDto dto);
-	public ApiResponse deleteUser(long id);
-	public UserResponseDto updateUserWithId(UserRequestDto dto,long id);
+	public ApiResponse deleteUser(Long id);
+	public UserResponseDto updateUserWithId(UserRequestDto dto,Long id);
 	
 	
 }

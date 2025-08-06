@@ -42,7 +42,7 @@ public class UserController {
 
    
     @GetMapping("/{id}")
-    public ResponseEntity<?> getUserWithId(@PathVariable long id){
+    public ResponseEntity<?> getUserWithId(@PathVariable Long id){
     	try {
 			return ResponseEntity.status(HttpStatus.OK)
 					.body(service.getUserWithId(id));
@@ -65,7 +65,7 @@ public class UserController {
     }
     //Todo: create api for deleteUser add Controller
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable long id){
+    public ResponseEntity<?> deleteUser(@PathVariable Long id){
     	return null;
     }
     

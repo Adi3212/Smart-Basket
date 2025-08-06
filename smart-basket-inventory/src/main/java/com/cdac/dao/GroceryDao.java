@@ -12,7 +12,7 @@ public interface GroceryDao extends JpaRepository<GroceryItem,Long>{
 	@Query("SELECT g FROM GroceryItem g JOIN FETCH g.user JOIN FETCH g.category")
 	List<GroceryItem> findAllWithUserAndCategory();
 	@Query("SELECT g FROM GroceryItem g WHERE g.user.id = :id")
-	List<GroceryItem> findByUserId(@Param("id") long id);
+	List<GroceryItem> findByUserId(@Param("id") Long id);
 	
 	
 }

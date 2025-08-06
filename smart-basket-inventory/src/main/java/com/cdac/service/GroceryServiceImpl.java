@@ -44,7 +44,7 @@ public class GroceryServiceImpl implements GroceryService{
 	}
 
 	@Override
-	public GroceryResponseDto getGroceryById(long id) {
+	public GroceryResponseDto getGroceryById(Long id) {
 		// TODO Auto-generated method stub
 		
 		      GroceryItem item=  groceryDao.findById(id).orElseThrow(()-> new ResourceNotFoundException("the data not found with the id"));
@@ -71,7 +71,7 @@ public class GroceryServiceImpl implements GroceryService{
 	}
 
 	@Override
-	public ApiResponse deleteGroceryById(long id) {
+	public ApiResponse deleteGroceryById(Long id) {
 		// TODO Auto-generated method stub
 		
 		GroceryItem item = groceryDao.findById(id).orElseThrow(()->new ResourceNotFoundException("No grocery with this id"));
@@ -80,7 +80,7 @@ public class GroceryServiceImpl implements GroceryService{
 	}
 
 	@Override
-	public GroceryResponseDto updateGrocery(long id, GroceryRequestDto dto) {
+	public GroceryResponseDto updateGrocery(Long id, GroceryRequestDto dto) {
 
 	    
 	    GroceryItem existingItem = groceryDao.findById(id)
@@ -105,8 +105,10 @@ public class GroceryServiceImpl implements GroceryService{
 	}
 
 	@Override
-	public List<GroceryResponseDto> groceryOfSpecificUser(long userId) {
+	public List<GroceryResponseDto> groceryOfSpecificUser(Long userId) {
 		// TODO Auto-generated method stub
+		System.out.println("reached method--------");
+		System.out.println(userId);
 		
 		List<GroceryItem> userItems = groceryDao.findByUserId(userId);
 		

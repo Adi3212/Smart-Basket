@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public UserResponseDto getUserWithId(long id) {
+	public UserResponseDto getUserWithId(Long id) {
 		// TODO Auto-generated method stub
 		User user = userDao.findById(id)
 			    .orElseThrow(() -> new ResourceNotFoundException("No user with id"));
@@ -86,7 +86,7 @@ public class UserServiceImpl implements UserService{
 
 
 	@Override
-	public ApiResponse deleteUser(long id) {
+	public ApiResponse deleteUser(Long id) {
 		// TODO Auto-generated method stub
 		User user = userDao.findById(id)
 			    .orElseThrow(() -> new ResourceNotFoundException("No user with id"));
@@ -99,7 +99,7 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public UserResponseDto updateUserWithId(UserRequestDto dto, long id) {
+	public UserResponseDto updateUserWithId(UserRequestDto dto, Long id) {
 	    User existingUser = userDao.findById(id)
 	        .orElseThrow(() -> new ResourceNotFoundException("No user with id"));
 
